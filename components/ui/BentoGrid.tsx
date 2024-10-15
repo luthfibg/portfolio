@@ -2,11 +2,14 @@
 import { cn } from "@/utils/cn";
 import { BackgroundGradientAnimation } from "./GradientAnimation";
 import { GlobeDemo } from "./GridGlobe";
-import Lottie from "react-lottie";
-import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+// import Lottie from "react-lottie";
+import { useState, useEffect, useRef } from "react";
 import animationData from "@/data/confetti.json";
 import MagicButton from "./MagicButton";
 import { IoCopyOutline } from "react-icons/io5";
+// Dynamically import Lottie to avoid SSR issues
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 export const BentoGrid = ({
   className,
@@ -61,15 +64,28 @@ export const BentoGridItem = ({
 }) => {
   const [copied, setCopied] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const lottieRef = useRef<any>(null); // Use a ref to access the Lottie instance
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText("luthfinewzoneonline@gmail.com");
-    setCopied(true);
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      try {
+        navigator.clipboard.writeText("luthfinewzoneonline@gmail.com");
+        setCopied(true);
+
+        // Play the animation when copied
+        if (lottieRef.current) {
+          lottieRef.current.play();
+        }
+      } catch (err) {
+        console.error("Failed to copy text", err);
+      }
+    }
   };
+
 
   return (
     <div
@@ -143,14 +159,14 @@ export const BentoGridItem = ({
         {id === 6 && isClient && (
         <div className="relative mt-5">
           <div className={`absolute -bottom-5 right-0`}>
-            <Lottie options={{ 
-              loop: copied,
-              autoplay: copied,
-              animationData: animationData,
-              rendererSettings: {
+            <Lottie
+              lottieRef={lottieRef}
+              loop={false}
+              autoplay={false}
+              animationData={animationData}
+              rendererSettings={{
                 preserveAspectRatio: 'xMidYMid slice',
-              }
-             }}
+              }}
             />
           </div>
           <MagicButton
