@@ -6,6 +6,7 @@ import { FloatingNav } from "@/components/ui/FloatingNavbar";
 import { navItems } from "@/data";
 import Experience from "@/components/Experience";
 import Approach from "@/components/Approach";
+import Footer from "@/components/Footer";
 // import Image from "next/image";
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
         <Clients/>
         <Experience/>
         <Approach/>
+        <Footer/>
       </div>
     </main>
   );
