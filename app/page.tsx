@@ -4,6 +4,8 @@ import RecentProjects from "@/components/RecentProjects";
 import Clients from "@/components/Clients";
 import { FloatingNav } from "@/components/ui/FloatingNavbar";
 import { navItems } from "@/data";
+import Experience from "@/components/Experience";
+import Approach from "@/components/Approach";
 // import Image from "next/image";
 
 export default function Home() {
@@ -18,6 +20,8 @@ export default function Home() {
         <Grid/>
         <RecentProjects/>
         <Clients/>
+        <Experience/>
+        <Approach/>
       </div>
     </main>
   );
