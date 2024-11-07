@@ -3,6 +3,7 @@ import { cn } from "@/utils/cn";
 import { BackgroundGradientAnimation } from "./GradientAnimation";
 import { GlobeDemo } from "./GridGlobe";
 import dynamic from "next/dynamic";
+import { useTheme } from "next-themes";
 // import Lottie from "react-lottie";
 import { useState, useEffect, useRef } from "react";
 import animationData from "@/data/confetti.json";
@@ -66,9 +67,7 @@ export const BentoGridItem = ({
   const [isClient, setIsClient] = useState(false);
   const lottieRef = useRef<any>(null); // Use a ref to access the Lottie instance
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const { theme } = useTheme();
 
   const handleCopyEmail = () => {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
@@ -86,18 +85,27 @@ export const BentoGridItem = ({
     }
   };
 
+  // Tentukan background style untuk masing-masing tema
+  const backgroundStyle = theme === "dark"
+    ? {
+        background: "rgb(4, 7, 29)",
+        backgroundImage: "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)",
+      }
+    : {
+        background: "rgb(249,236,255)",  // warna untuk tema light
+        backgroundImage: "linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(240,208,255,1) 100%)",
+      };
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <div
       className={cn(
-        "row-span-1 relative overflow-hidden rounded-3xl group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none justify-between flex flex-col space-y-4 border border-white/[0.1]",
+        "row-span-1 relative overflow-hidden rounded-3xl group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none bg-lightbento dark:bg-darkbento dark:bg-darkbentogradient justify-between flex flex-col space-y-4 border border-white/[0.1]",
         className
       )}
-      style={{ 
-        background: 'rgb(4, 7, 29)',
-        backgroundColor: 
-        'linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)',
-      }}
+      style={backgroundStyle}
     >
       <div className={`${id === 6 && 'flex justify-center'} h-full`}>
         <div className="absolute h-full w-full">
@@ -139,16 +147,16 @@ export const BentoGridItem = ({
           <div className="flex gap-1 lg:gap-5 w-fit absolute -right-3 lg:-right-2">
             <div className="flex flex-col gap-3 lg:gap-8">
               {['React.js', 'Next.js', 'Typescript'].map((item) => (
-                <span key={item} className="py-2 lg:py-4 lg:px-3 px-3 text-xs lg:text-base opacity-50 lg:opacity-100 rounded-lg text-center bg-white-200 dark:bg-[#10132E]">
+                <span key={item} className="py-2 lg:py-4 lg:px-3 px-3 text-xs lg:text-base opacity-50 lg:opacity-100 rounded-lg text-center bg-white dark:bg-[#10132E]">
                   {item}
                 </span>
               ))}
-              <span className="py-4 px-3 rounded-lg text-center bg-white-200 dark:bg-[#10132E]"/>
+              <span className="py-4 px-3 rounded-lg text-center bg-white dark:bg-[#10132E]"/>
             </div>
             <div className="flex flex-col gap-3 lg:gap-8">
-              <span className="py-4 px-3 rounded-lg text-center bg-white-200 dark:bg-[#10132E]"/>
+              <span className="py-4 px-3 rounded-lg text-center bg-white dark:bg-[#10132E]"/>
               {['MySQL', 'Express.js', 'Golang'].map((item) => (
-                <span key={item} className="py-2 lg:py-4 lg:px-3 px-3 text-xs lg:text-base opacity-50 lg:opacity-100 rounded-lg text-center bg-white-200 dark:bg-[#10132E]">
+                <span key={item} className="py-2 lg:py-4 lg:px-3 px-3 text-xs lg:text-base opacity-50 lg:opacity-100 rounded-lg text-center bg-white dark:bg-[#10132E]">
                   {item}
                 </span>
               ))}

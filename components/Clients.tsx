@@ -8,7 +8,7 @@ const Clients = () => {
     <div className='py-20' id='testimonials'>
       <h1 className='heading'>
         Some {' '}	
-        <span className='text-purple'>client testimonials</span>
+        <span className='dark:text-purple text-purple-600'>client testimonials</span>
       </h1>
       <div className='flex flex-col items-center max-lg:mt-10'>
         <InfiniteMovingCards

@@ -41,7 +41,14 @@ const config = {
         blue: {
           "100": "#E4ECFF",
         },
-        purple: "#CBACF9",
+        darkbento: "rgb(4,7,29)",
+        darkbentogradient: 'linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)',
+        lightbento: "rgb(249,236,255)",
+        lightbentogradient: "rgba(171,178,250,1)",
+        purple: {
+          DEFAULT: "#CBACF9",
+          "new": "#F0D0FF"
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
