@@ -1,7 +1,6 @@
 import React from 'react'
 import MagicButton from './ui/MagicButton'
 import { FaLocationArrow } from 'react-icons/fa'
-import { div } from 'framer-motion/client'
 import { socialMedia } from '@/data'
 
 const Footer = () => {

@@ -112,7 +112,11 @@ const AceternityIcon = ({order}: {order: string}) => {
   );
 };
 
-export const Icon = ({ className, ...rest }: any) => {
+type IconProps = {
+  className?: string;
+} & React.SVGProps<SVGSVGElement>;
+
+export const Icon: React.FC<IconProps> = ({ className, ...rest }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
