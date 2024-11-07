@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 import {
   motion,
   AnimatePresence,
@@ -20,23 +21,22 @@ export const FloatingNav = ({
   }[];
   className?: string;
 }) => {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const { scrollYProgress } = useScroll();
-
   const [visible, setVisible] = useState(false);
 
-  useMotionValueEvent(scrollYProgress, "change", (current) => {
-    // Check if current is not undefined and is a number
-    if (typeof current === "number") {
-      let direction = current! - scrollYProgress.getPrevious()!;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
+  useMotionValueEvent(scrollYProgress, "change", (current) => {
+    if (typeof current === "number") {
+      const direction = current - scrollYProgress.getPrevious()!;
       if (scrollYProgress.get() < 0.05) {
         setVisible(false);
       } else {
-        if (direction < 0) {
-          setVisible(true);
-        } else {
-          setVisible(false);
-        }
+        setVisible(direction < 0);
       }
     }
   });
@@ -56,7 +56,7 @@ export const FloatingNav = ({
           duration: 0.2,
         }}
         className={cn(
-          "flex max-w-fit fixed top-10 inset-x-0 mx-auto border bg-black-100 rounded-full shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[5000] px-10 py-5 pl-8 items-center justify-center space-x-4 border-white/[0.2]",
+          "flex max-w-fit fixed top-10 inset-x-0 mx-auto border bg-white-100 dark:bg-black-100 rounded-full shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[5000] px-6 py-3 pl-8 items-center justify-center space-x-4 dark:border-white/[0.2]",
           className
         )}
       >
@@ -72,6 +72,23 @@ export const FloatingNav = ({
             <span className="text-sm !cursor-pointer">{navItem.name}</span>
           </Link>
         ))}
+        
+        {mounted && (
+          <button
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            className="theme-toggle "
+          >
+            {theme === "light" ? 
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+              </svg>
+              : 
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+              </svg>
+            }
+          </button>
+        )}
       </motion.div>
     </AnimatePresence>
   );
