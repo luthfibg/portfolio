@@ -9,6 +9,7 @@ import { useState, useEffect, useRef } from "react";
 import animationData from "@/data/confetti.json";
 import MagicButton from "./MagicButton";
 import { IoCopyOutline } from "react-icons/io5";
+import { LottieRefCurrentProps } from "lottie-react";
 // Dynamically import Lottie to avoid SSR issues
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
@@ -65,7 +66,7 @@ export const BentoGridItem = ({
 }) => {
   const [copied, setCopied] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const lottieRef = useRef<any>(null); // Use a ref to access the Lottie instance
+  const lottieRef = useRef<LottieRefCurrentProps | null>(null);// Use a ref to access the Lottie instance
 
   const { theme } = useTheme();
 
