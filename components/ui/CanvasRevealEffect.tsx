@@ -53,6 +53,16 @@ interface DotMatrixProps {
   center?: ("x" | "y")[];
 }
 
+type UniformType =
+  | { value: number; type: 'uniform1f' }
+  | { value: number[]; type: 'uniform1fv' }
+  | { value: number[][]; type: 'uniform3fv' }
+  | { value: number[]; type: 'uniform2f' | 'uniform3f' };
+
+interface Uniforms {
+  [key: string]: UniformType;
+}
+
 const DotMatrix: React.FC<DotMatrixProps> = ({
   colors = [[0, 0, 0]],
   opacities = [0.04, 0.04, 0.04, 0.04, 0.04, 0.08, 0.08, 0.08, 0.08, 0.14],
@@ -61,8 +71,8 @@ const DotMatrix: React.FC<DotMatrixProps> = ({
   shader = "",
   center = ["x", "y"],
 }) => {
-  const uniforms = React.useMemo(() => {
-    let colorsArray = Array(6).fill(colors[0]);
+  const uniforms: Uniforms = React.useMemo(() => {
+    let colorsArray: number[][] = Array(6).fill(colors[0]);
     if (colors.length === 2) {
       colorsArray = [colors[0], colors[0], colors[0], colors[1], colors[1], colors[1]];
     } else if (colors.length === 3) {
@@ -71,7 +81,7 @@ const DotMatrix: React.FC<DotMatrixProps> = ({
 
     return {
       u_colors: {
-        value: colorsArray.map(color => color.map(c => c / 255)),
+        value: colorsArray.map(color => color.map((c: number) => c / 255)),
         type: "uniform3fv",
       },
       u_opacities: {
@@ -91,17 +101,36 @@ const DotMatrix: React.FC<DotMatrixProps> = ({
 
   return (
     <Shader
-      source={`...`} // shader source code
+      source={`
+        precision mediump float;
+        uniform float u_time;
+        uniform float u_opacities[10];
+        uniform vec3 u_colors[6];
+        uniform float u_total_size;
+        uniform float u_dot_size;
+        uniform vec2 u_resolution;
+        out vec4 fragColor;
+        void main() {
+          vec2 st = gl_FragCoord.xy / u_resolution;
+          float opacity = u_opacities[int(mod(st.x * 10.0, 10.0))];
+          vec3 color = u_colors[int(mod(st.y * 6.0, 6.0))];
+          fragColor = vec4(color, opacity);
+        }
+      `}
       uniforms={uniforms}
       maxFps={60}
     />
   );
 };
 
-type Uniforms = Record<string, {
-  value: number | number[] | number[][];
-  type: "uniform1f" | "uniform1fv" | "uniform3f" | "uniform3fv" | "uniform2f";
-}>;
+// type Uniforms = Record<string, {
+//   value: number | number[] | number[][];
+//   type: "uniform1f" | "uniform1fv" | "uniform3f" | "uniform3fv" | "uniform2f";
+// }>;
+
+// interface Uniforms {
+//   [key: string]: UniformType;
+// }
 
 const ShaderMaterial = ({
   source,
@@ -153,6 +182,7 @@ const ShaderMaterial = ({
     preparedUniforms["u_time"] = { value: 0, type: "1f" };
     preparedUniforms["u_resolution"] = {
       value: new THREE.Vector2(size.width * 2, size.height * 2),
+      type: "2f",
     };
 
     return preparedUniforms;
