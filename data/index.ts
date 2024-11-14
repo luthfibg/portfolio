@@ -1,3 +1,6 @@
+import { useTheme } from "next-themes";
+
+
 export const navItems = [
     { name: "About", link: "#about" },
     { name: "Projects", link: "#projects" },
@@ -13,7 +16,8 @@ export const navItems = [
       className: "lg:col-span-3 md:col-span-6 md:row-span-4 lg:min-h-[60vh]",
       imgClassName: "w-full h-full",
       titleClassName: "justify-end",
-      img: "/b1.svg",
+      // img: theme === "light" ? ("/Me-O.jpg") : ("/Me-O-dark.png"),
+      img: "/trust.png",
       spareImg: "",
     },
     {
